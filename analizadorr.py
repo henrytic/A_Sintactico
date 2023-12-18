@@ -1,9 +1,6 @@
 import ply.lex as lex
 import ply.yacc as yacc
 
-# --- Analizador Léxico ---
-
-# Lista de tokens
 tokens = [
     'ID', 'NUMBER', 'REAL', 'PLUS', 'MINUS', 'TIMES', 'DIVIDE', 'LPAREN',
     'RPAREN', 'LBRACE', 'RBRACE', 'LBRACKET', 'RBRACKET', 'EQUALS',
@@ -12,7 +9,6 @@ tokens = [
     'DO', 'BREAK', 'TRUE', 'FALSE', 'INT', 'FLOAT', 'COMMA'
 ]
 
-# Reglas para expresiones regulares simples
 t_PLUS       = r'\+'
 t_MINUS      = r'-'
 t_TIMES      = r'\*'
@@ -36,44 +32,34 @@ t_AND          = r'&&'
 t_OR           = r'\|\|'
 t_NOT          = r'!'
 
-# Palabras reservadas
 reserved = {
     'if': 'IF', 'else': 'ELSE', 'while': 'WHILE', 'do': 'DO', 'break': 'BREAK',
     'true': 'TRUE', 'false': 'FALSE', 'int': 'INT', 'float': 'FLOAT'
 }
 
-# Regla para identificadores
 def t_ID(t):
     r'[a-zA-Z_][a-zA-Z_0-9]*'
     t.type = reserved.get(t.value, 'ID')  # Check for reserved words
     return t
 
-# Regla para números reales
 def t_REAL(t):
     r'\d+\.\d+'
     t.value = float(t.value)
     return t
 
-# Regla para números enteros
 def t_NUMBER(t):
     r'\d+'
     t.value = int(t.value)
     return t
 
-# Regla para manejar errores
 def t_error(t):
     print(f"Illegal character '{t.value[0]}'")
     t.lexer.skip(1)
 
-# Ignorar espacios, tabulaciones y saltos de línea
 t_ignore = ' \t\n'
 
-# Construir el lexer
 lexer = lex.lex()
 
-# --- Analizador Sintáctico ---
-
-# Reglas de gramática
 errores_encontrados = False
 
 def p_programa(p):
@@ -175,19 +161,20 @@ def p_error(p):
     else:
         print("Error de sintaxis en EOF")
 
-# Construir el analizador sintáctico
 parser = yacc.yacc()
+def leer_archivo(nombre_archivo):
+    with open(nombre_archivo, 'r') as file:
+        return file.read()
 
+contenido_archivo = leer_archivo('input.txt')
 # Probar el analizador sintáctico con una entrada
-data = '''{
-  int i; int j; float v; float x; float[100] a;
-  while( true ) {
-  do i = i+1; while( a[i] < v);
-  do j = j-1; while( a[j] > v);
-  if( i >= j ) break;
-  x = a[i]; a[i] = a[j]; a[j] = x;
-  }}
-  '''
-
-# Analizar la entrada
-parser.parse(data)
+#data = '''{
+ # int i; int j; float v; float x; float[100] a;
+  #while( true ) {
+  #do i = i+1; while( a[i] < v);
+  #do j = j-1; while( a[j] > v);
+  #if( i >= j ) break;
+  #x = a[i]; a[i] = a[j]; a[j] = x;
+  #}}
+  #'''
+parser.parse(contenido_archivo)
