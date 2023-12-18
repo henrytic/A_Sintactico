@@ -24,7 +24,7 @@ term --> term * unario | term / unario | unario
 unario --> ! unario | - unario | factor
 factor --> ( bool ) | loc | num | real | true | false
 
-#para este bloque de codigo
+# para este bloque de codigo
  { 
   int i; int j; float v; float x; float[100] a;
   while( true ) {
